@@ -1,0 +1,4 @@
+O(1)       /* Best case: Array is already sorted*/
+O(n^2)     /* Average case*/
+O(n^2)     /* Worst case*/
+
