@@ -1,45 +1,55 @@
 #include "sort.h"
 
 /**
- * insertion_sort_list - Sorts a doubly linked list of integers
- * in ascending order using the Insertion sort algorithm.
- * @list: Pointer to the head of the doubly linked list.
+ * insertion_sort_list - Function that sorts a doubly linked list in ascending
+ *                       order using the Insertion sort algorithm.
+ * @list: Pointer to the doubly linked list to be sorted.
+ *
+ * Description: If the list is null, or the list is empty, or the list has only
+ *              one node, the function returns without making any changes. The
+ *              function iterates over the list, inserting each node at its
+ *              correct position in the sorted part of the list.
+ *
+ * Return: This function does not return a value.
  */
 void insertion_sort_list(listint_t **list)
 {
-	if (list == NULL || *list == NULL || (*list)->next == NULL)
+	/* Declare pointers for the current node and a temporary node */
+	listint_t *current, *temp;
+
+	/* If list is null, or list is empty, or the list has only one node, return */
+	if (!list || !*list || !(*list)->next)
 		return;
 
-	listint_t *sorted = NULL;
-	listint_t *current = *list;
-	listint_t *next;
-	listint_t *temp;
-
-	while (current != NULL)
+	/* Loop through the list, starting from the second node */
+	for (current = (*list)->next; current; current = temp)
 	{
-		next = current->next;
+		/* Store the next node in a temporary variable */
+		temp = current->next;
 
-		if (sorted == NULL || sorted->n >= current->n)
+		/* While the current node is less than the previous node */
+		while (current->prev && current->prev->n > current->n)
 		{
-			current->next = sorted;
-			current->prev = NULL;
-			if (sorted != NULL)
-				sorted->prev = current;
-			sorted = current;
+			/* Detach the current node from the list */
+			current->prev->next = current->next;
+			if (current->next)
+				current->next->prev = current->prev;
+
+			/* Insert the current node before the previous node */
+			current->next = current->prev;
+			current->prev = current->next->prev;
+			current->next->prev = current;
+
+			/* If the current node is now the first node, update the list pointer */
+			if (!current->prev)
+				*list = current;
+			else
+				current->prev->next = current;
+
+			/* Print the list after the insertion */
+			print_list(*list);
 		}
-		else
-		{
-			temp = sorted;
-			while (temp->next != NULL && temp->next->n < current->n)
-				temp = temp->next;
-			current->next = temp->next;
-			current->prev = temp;
-			if (temp->next != NULL)
-				temp->next->prev = current;
-			temp->next = current;
-		}
-		print_list(sorted);
-		current = next;
+
 	}
-	*list = sorted;
+
 }
