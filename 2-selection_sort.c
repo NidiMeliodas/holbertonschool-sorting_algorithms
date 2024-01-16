@@ -11,7 +11,9 @@ void selection_sort(int *array, size_t size)
 	if (!array || size <= 1)
 		return;
 
-	size_t i, j, min_idx;
+	size_t i;
+	size_t j;
+	size_t min_idx;
 
 	for (i = 0; i < size - 1; i++)
 	{
